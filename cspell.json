@@ -1,7 +1,12 @@
 {
   "version": "0.2",
   "language": "en",
-  "words": ["easymail", "neteng", "nojekyll"],
+  "words": [
+    "easymail",
+    "neteng",
+    "nojekyll",
+    "NWPRO"
+  ],
   "ignorePaths": [
     ".gitignore",
     ".gitattributes",
@@ -10,6 +15,12 @@
     "**/node_modules/**"
   ],
   "ignoreWords": [],
-  "enableFiletypes": ["javascript", "typescript", "json", "markdown", "html"],
+  "enableFiletypes": [
+    "javascript",
+    "typescript",
+    "json",
+    "markdown",
+    "html"
+  ],
   "useGitignore": true
 }

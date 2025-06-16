@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   build:
+    needs: check-codeql
     runs-on: ubuntu-24.04
 
     steps:
@@ -46,8 +47,9 @@ jobs:
 
   # Deployment job
   deploy:
-    runs-on: ubuntu-24.04
     needs: build
+    runs-on: ubuntu-24.04
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
