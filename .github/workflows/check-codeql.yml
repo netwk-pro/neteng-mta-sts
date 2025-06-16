@@ -19,24 +19,23 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Check CodeQL Workflow
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh --version
+    - name: Check CodeQL Workflow
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh --version
 
-          # Attempt to retrieve CodeQL run status
-          if ! gh run list --repo "${GITHUB_REPOSITORY}" --workflow "CodeQL" --limit 1 --json conclusion --jq '.[0].conclusion' > codeql_status.txt 2>/dev/null; then
-            echo "⚠️ Warning: Failed to query CodeQL status via gh CLI"
-            echo "Assuming CodeQL not enforced. Continuing..."
-            exit 0
-          fi
+        # Attempt to retrieve latest CodeQL status
+        if ! gh run list --repo "${GITHUB_REPOSITORY}" --workflow "CodeQL" --limit 1 --json conclusion --jq '.[0].conclusion' > codeql_status.txt; then
+          echo "::error title=CodeQL Check Failed::Could not retrieve CodeQL run status. Blocking deployment."
+          exit 1
+        fi
 
-          CODEQL_STATUS=$(cat codeql_status.txt)
-          echo "CodeQL status: $CODEQL_STATUS"
-          if [[ "$CODEQL_STATUS" != "success" ]]; then
-            echo "❌ CodeQL Analysis did not succeed. Exiting..."
-            exit 1
-          fi
+        CODEQL_STATUS=$(cat codeql_status.txt)
+        echo "CodeQL status: $CODEQL_STATUS"
+        if [[ "$CODEQL_STATUS" != "success" ]]; then
+          echo "::error title=CodeQL Check Failed::Latest CodeQL run did not succeed. Blocking deployment."
+          exit 1
+        fi
 
-          rm -f codeql_status.txt
+        rm -f codeql_status.txt
