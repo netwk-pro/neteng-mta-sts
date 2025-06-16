@@ -21,6 +21,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-codeql:
+    uses: ./.github/workflows/check-codeql.yml
+
   build:
     needs: check-codeql
     runs-on: ubuntu-24.04
