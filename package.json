@@ -1,6 +1,6 @@
 {
   "name": "neteng-mta-sts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Deploys .well-known/mta-sts.txt file for neteng.pro",
   "keywords": [
     "mta-sts",
