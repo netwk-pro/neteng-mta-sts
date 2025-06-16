@@ -12,31 +12,21 @@ permissions:
 
 on:
   workflow_call:
-    outputs:
-      passed:
-        description: "Whether the latest CodeQL run succeeded"
-        value: ${{ jobs.check.outputs.codeql_passed }}
 
 jobs:
   check:
     name: Check CodeQL Status
     runs-on: ubuntu-24.04
-    outputs:
-      codeql_passed: ${{ steps.result.outputs.passed }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up GitHub CLI
-        run: sudo apt-get install gh
-
       - name: Check CodeQL Workflow
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh run list --workflow "CodeQL" --json conclusion --jq '.[0].conclusion' > codeql_status.txt
+          gh --version
+          gh run list --workflow "CodeQL" --limit 1 --json conclusion --jq '.[0].conclusion' > codeql_status.txt
           CODEQL_STATUS=$(cat codeql_status.txt)
+          echo "CodeQL status: $CODEQL_STATUS"
           if [[ "$CODEQL_STATUS" != "success" ]]; then
             echo "CodeQL Analysis did not succeed. Exiting..."
             exit 1
